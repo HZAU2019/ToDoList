@@ -12,7 +12,8 @@ class ToDoList extends React.Component{
       {firstName:"Liu",secondName:"Wenbo"}
     ];
     this.state = {
-      oldNameList:nameArray
+      oldNameList:nameArray,
+      selectIndex:-1
     };
   }
 
@@ -21,13 +22,33 @@ class ToDoList extends React.Component{
     if(addName.firstName!=null&&addName.secondName!=null&&addName.firstName.trim().length>0&&
       addName.secondName.trim().length>0&&!this.state.oldNameList.find(
       s => s.firstName===addName.firstName&&s.secondName===addName.secondName)){
-        const newNameList = this.state.oldNameList;
-        newNameList.push(addName);
-        this.setState({oldNameList:newNameList});
+        console.log("当前index:"+this.state.selectIndex);
+        console.log(this.state.oldNameList);
+        if(this.state.selectIndex>-1){
+          const newNameList = this.state.oldNameList.slice(0,this.state.oldNameList.length);
+          console.log("准备修改");
+          console.log(newNameList);
+          newNameList.splice(this.state.selectIndex,1);
+          console.log("修改结束");
+          console.log(newNameList);
+          this.setState({oldNameList:newNameList,selectIndex:-1});
+        }else{
+          const newNameList = this.state.oldNameList;
+          newNameList.push(addName);
+          this.setState({oldNameList:newNameList});
+        }
+        
     } 
   }
 
   handleDeleteClick(delName){
+    //判断是否有选中的要删除的名字
+    if(this.state.selectIndex > -1){
+      const newNameList = this.state.oldNameList.slice(0,this.state.oldNameList.length);
+      newNameList.splice(this.state.selectIndex,1);
+      this.setState({oldNameList:newNameList,selectIndex:-1});
+      return;
+    }
     //判断删除的名字是否对应存放的列表
     const index = this.state.oldNameList.findIndex(
       s => s.firstName===delName.firstName&&s.secondName===delName.secondName);
@@ -36,6 +57,13 @@ class ToDoList extends React.Component{
       newNameList.splice(index,1)
       this.setState({oldNameList:newNameList});
     }
+  }
+  handleselectIndex(selectIndex){
+    if(selectIndex === this.state.selectIndex){
+      this.setState({selectIndex:-1})
+    }else{
+      this.setState({selectIndex:selectIndex});
+    }  
   }
 
   
@@ -46,7 +74,9 @@ class ToDoList extends React.Component{
             onAddClick = {(addName)=>this.handleAddClick(addName)}
             onDeleteClick = {(delName)=>this.handleDeleteClick(delName)}/>
           <br/>
-          <Result nameList = {this.state.oldNameList}/>  
+          <Result nameList = {this.state.oldNameList}
+          onClick = {(selectIndex)=>this.handleselectIndex(selectIndex)}
+          selectIndex = {this.state.selectIndex}/>  
       </div>
     );
   }; 
@@ -82,9 +112,13 @@ class Operate extends React.Component{
 }
 
 function Result(props){
-  console.log(props.nameList);
-  const listItems = props.nameList.map((name)=><ListName key={(name.firstName+name.secondName).toString()}
-    firstName = {name.firstName} secondName = {name.secondName} />);
+  //console.log(props.nameList);
+  const listItems = props.nameList.map((name,index)=>{
+    let selectColor = index===props.selectIndex?"#ff0000":"#000000";
+    return (<ListName key={(name.firstName+name.secondName).toString()}
+     firstName = {name.firstName} secondName = {name.secondName} 
+     selectColor ={selectColor}
+     onClick = {()=>props.onClick(index)}/>)});
   return (
     <div>
         <div>当前所有人:</div>
@@ -96,8 +130,10 @@ function Result(props){
 }
 
 function ListName(props){
-  return <li>{props.firstName+" "+props.secondName}</li>;
-
+  console.log(props.selectColor);
+  return <li onClick = {props.onClick} >
+    <font color = {props.selectColor}>{props.firstName+" "+props.secondName}</font>
+    </li>;
 }
 
 // ========================================
