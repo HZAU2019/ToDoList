@@ -28,7 +28,7 @@ class ToDoList extends React.Component{
           const newNameList = this.state.oldNameList.slice(0,this.state.oldNameList.length);
           console.log("准备修改");
           console.log(newNameList);
-          newNameList.splice(this.state.selectIndex,1);
+          newNameList.splice(this.state.selectIndex,1,addName);
           console.log("修改结束");
           console.log(newNameList);
           this.setState({oldNameList:newNameList,selectIndex:-1});
@@ -66,7 +66,6 @@ class ToDoList extends React.Component{
     }  
   }
 
-  
   render(){
     return (
       <div>
