@@ -12,20 +12,25 @@ const nameArray = [
 const mobxData = observable({
     oldNameList:nameArray,
     selectIndex:-1,
-    firstName:"",
-    secondName:"",
+    firstName:null,
+    secondName:null,
     }
 );
 
-const ToDoList = observer(({mobxData})=>{ {  
+const ToDoList = observer((nameArray)=>{
+    function onAddClick(){
+
+    }
+    function onDeleteClick(){
+
+    }
     return (
        <div>
-          <Operate opertateState = {mobxData}/>
+          <Operate opertateState = {nameArray.list}/>
           <br/>
-          <Result opertateState = {mobxData}/>  
+          <Result useful = {nameArray.list}/>  
       </div>
     );
-  }
 }
 )
 
@@ -38,7 +43,7 @@ const Operate = observer(({opertateState})=>{
         console.log(opertateState.oldNameList);
         if(opertateState.selectIndex>-1){
           console.log("准备修改");
-          opertateState.oldNameList.splice(opertateState.selectIndex,1,{firstName:opertateState.firstName,secondName:opertateState.secondName});
+          opertateState.oldNameList.splice(this.state.selectIndex,1,addName);
           console.log("修改结束");
           console.log(opertateState.oldNameList);
           opertateState.selectIndex = -1;
@@ -48,10 +53,9 @@ const Operate = observer(({opertateState})=>{
     } 
     }
     function onDeleteClick(){
-       //判断是否有选中的要删除的名字
         if(opertateState.selectIndex > -1){
+            //判断是否有选中的要删除的名字
             opertateState.oldNameList.splice(opertateState.selectIndex,1);
-            opertateState.selectIndex = -1;
             return;
         }
           //判断删除的名字是否在列表中已经存在
@@ -65,7 +69,7 @@ const Operate = observer(({opertateState})=>{
         opertateState.firstName = e.target.value;
     }
     function handleSecondChange(e){
-        opertateState.secondName = e.target.value;
+        opertateState.sencondName = e.target.value;
     }
     return (
         <div>
@@ -98,11 +102,16 @@ const Result = observer(({opertateState})=>{
     );
 }  
 )
-function ListName(props){
-  console.log(props.selectColor);
-  return <li onClick = {props.onClick} >
-    <font color = {props.selectColor}>{props.firstName+" "+props.secondName}</font>
-    </li>;
+
+const ListName = observer(({firstName,selectColor,onClick})=>{
+    return (
+        <li onClick = {onClick} >
+        <font color = {selectColor}>{firstName+" "+secondName}</font>
+        </li>
+    );
 }
 
-ReactDOM.render(<ToDoList mobxData = {mobxData}/>,document.getElementById("root"));
+)
+
+
+ReactDOM(<ToDoList list = {nameArray}/>,document.getElementById("root"));
