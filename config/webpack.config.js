@@ -557,6 +557,7 @@ module.exports = function (webpackEnv) {
       ],
     },
     plugins: [
+      ["@babel/plugin-proposal-decorators", { "legacy": true }],
       // Generates an `index.html` file with the <script> injected.
       new HtmlWebpackPlugin(
         Object.assign(

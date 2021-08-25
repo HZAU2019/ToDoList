@@ -87,7 +87,7 @@ const Result = observer(({opertateState})=>{
         return (<ListName key={(name.firstName+name.secondName).toString()}
          firstName = {name.firstName} secondName = {name.secondName} 
          selectColor ={selectColor}
-         onClick = {()=>opertateState.selectIndex = index}/>)});
+         onClick = {()=>opertateState.selectIndex = opertateState.selectIndex=== -1?index:-1}/>)});
     return(
         <div>
         <div>当前所有人:</div>
